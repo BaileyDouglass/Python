@@ -1,0 +1,50 @@
+# Simulation Parameters
+time_step = 0.1
+total_time = 20.0
+
+# PID Controller parameters
+proportional_gain = 1.0 # Kp
+integral_gain = 0.1     # Ki
+derivative_gain = 0.01  # Kd
+
+# Variables for storing previous and integral error values
+previous_error = 0.0
+integral_error = 0.0
+
+# Placeholder for the control signal (output of the PID controller)
+control_signal = 0.0
+
+# Placeholder for the system state (this could be temprature, position, etc)
+system_state = 0.0
+
+# Desired system state (setpoint)
+set_point = 1.0
+
+# Loop for each time step in the simulation
+for t in range(int(total_time / time_step)):
+
+    # Calculate the current error (difference between desired and actual state)
+    error_value = set_point - system_state
+
+    # Integral term (accumulate the error over time)
+    integral_error += error_value * time_step
+
+    # Derivative term (rate of change of error)
+    derivative_error = (error_value - previous_error) / time_step
+
+    # Calculate the control signal using the PID equation
+    control_signal = (
+        proportional_gain * error_value +
+        integral_gain * integral_error +
+        derivative_gain * derivative_error
+    )
+
+    # For this example, let's assume the control_signal directly updates the system_state
+    # In a real system, this control_signal wuold be applied to some actuator
+    system_state += control_signal * time_step
+
+    # Update the previous error
+    previous_error = error_value
+
+    # Log the details for this iteration
+    print(f"Time: {t*time_step:.1f}, Error: {error_value:.2f}, Control Signal: {control_signal:.2f}, System State: {system_state:.2f}")
